@@ -290,9 +290,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ message: "Parking slot not available" });
       }
 
-      // Convert string dates to Date objects if needed
-      const startTime = typeof bookingData.startTime === 'string' ? new Date(bookingData.startTime) : bookingData.startTime;
-      const endTime = typeof bookingData.endTime === 'string' ? new Date(bookingData.endTime) : bookingData.endTime;
+      // Convert string dates to Date objects for database storage
+      const startTime = new Date(bookingData.startTime);
+      const endTime = new Date(bookingData.endTime);
 
       const booking = await storage.createBooking({
         ...bookingData,
