@@ -131,6 +131,7 @@ export const insertOwnerSchema = createInsertSchema(owners).omit({
 export const insertParkingSlotSchema = createInsertSchema(parkingSlots).omit({
   id: true,
   createdAt: true,
+  ownerId: true,
 });
 
 export const insertBookingSchema = createInsertSchema(bookings).omit({
