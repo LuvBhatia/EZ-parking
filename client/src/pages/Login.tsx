@@ -22,13 +22,41 @@ export default function Login() {
     setIsLoading(true);
 
     try {
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message);
+      }
+
+      const data = await response.json();
       await login(email, password);
+      
       toast({
         title: "Login Successful",
         description: "Welcome back!",
         variant: "default",
       });
-      setLocation("/dashboard");
+
+      // Redirect based on user role
+      switch (data.user.role) {
+        case "admin":
+          setLocation("/admin");
+          break;
+        case "owner":
+          setLocation("/owner");
+          break;
+        case "user":
+        default:
+          setLocation("/dashboard");
+          break;
+      }
     } catch (error: any) {
       toast({
         title: "Login Failed",
