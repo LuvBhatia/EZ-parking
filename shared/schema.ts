@@ -134,17 +134,12 @@ export const insertParkingSlotSchema = createInsertSchema(parkingSlots).omit({
   ownerId: true,
 });
 
-export const insertBookingSchema = createInsertSchema(bookings).omit({
-  id: true,
-  createdAt: true,
-  approvedAt: true,
-  paidAt: true,
-  status: true,
-  paymentIntentId: true,
-  userId: true,
-}).extend({
-  startTime: z.string().or(z.date()),
-  endTime: z.string().or(z.date()),
+export const insertBookingSchema = z.object({
+  slotId: z.string(),
+  startTime: z.string(),
+  endTime: z.string(), 
+  duration: z.number(),
+  totalAmount: z.string(),
 });
 
 export const insertNotificationSchema = createInsertSchema(notifications).omit({
