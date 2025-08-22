@@ -41,7 +41,7 @@ export default function AddSlotModal({ isOpen, onClose }: AddSlotModalProps) {
         },
         body: JSON.stringify({
           ...formData,
-          pricePerHour: parseFloat(formData.pricePerHour),
+          pricePerHour: formData.pricePerHour,
         }),
       });
 
