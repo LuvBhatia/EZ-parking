@@ -59,83 +59,102 @@ export default function Register() {
   };
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center">
-      <Card className="w-full max-w-md mx-4">
-        <CardHeader className="text-center">
-          <div className="flex justify-center mb-4">
-            <Car className="text-primary text-4xl" />
-          </div>
-          <CardTitle className="text-2xl font-bold">Create Account</CardTitle>
-          <CardDescription>
-            Join Smart Parking and start your journey
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <Label htmlFor="username">Username</Label>
-              <Input
-                id="username"
-                type="text"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                required
-                data-testid="input-username"
-              />
+    <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-green-100 flex items-center justify-center p-4">
+      <div className="w-full max-w-md">
+        <Card className="shadow-2xl border-0 bg-white/80 backdrop-blur-sm">
+          <CardHeader className="text-center pb-6 pt-8">
+            <div className="flex justify-center mb-6">
+              <div className="p-4 bg-gradient-to-br from-green-500 to-green-600 rounded-full shadow-lg">
+                <Car className="text-white text-3xl" />
+              </div>
             </div>
-            <div>
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                data-testid="input-email"
-              />
+            <CardTitle className="text-3xl font-bold bg-gradient-to-r from-green-600 to-green-800 bg-clip-text text-transparent">
+              Create Account
+            </CardTitle>
+            <CardDescription className="text-gray-600 text-base mt-2">
+              Join Smart Parking and start your journey
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="px-8 pb-8">
+            <form onSubmit={handleSubmit} className="space-y-5">
+              <div className="space-y-2">
+                <Label htmlFor="username" className="text-gray-700 font-medium">Username</Label>
+                <Input
+                  id="username"
+                  type="text"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  required
+                  className="h-12 border-gray-200 focus:border-green-500 focus:ring-green-500 transition-colors"
+                  placeholder="Choose a username"
+                  data-testid="input-username"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="email" className="text-gray-700 font-medium">Email Address</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  className="h-12 border-gray-200 focus:border-green-500 focus:ring-green-500 transition-colors"
+                  placeholder="Enter your email"
+                  data-testid="input-email"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="password" className="text-gray-700 font-medium">Password</Label>
+                <Input
+                  id="password"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  className="h-12 border-gray-200 focus:border-green-500 focus:ring-green-500 transition-colors"
+                  placeholder="Create a strong password"
+                  data-testid="input-password"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="role" className="text-gray-700 font-medium">Account Type</Label>
+                <Select value={role} onValueChange={setRole}>
+                  <SelectTrigger className="h-12 border-gray-200 focus:border-green-500 focus:ring-green-500" data-testid="select-role">
+                    <SelectValue placeholder="Select account type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="user">🚗 Car Owner (Find Parking)</SelectItem>
+                    <SelectItem value="owner">🏢 Parking Owner (Rent Space)</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <Button 
+                type="submit" 
+                className="w-full h-12 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-semibold text-base shadow-lg transition-all duration-200 transform hover:scale-[1.02] mt-6" 
+                disabled={isLoading}
+                data-testid="button-submit"
+              >
+                {isLoading ? (
+                  <div className="flex items-center gap-2">
+                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    Creating Account...
+                  </div>
+                ) : (
+                  "Create Account"
+                )}
+              </Button>
+            </form>
+            <div className="mt-6 text-center">
+              <p className="text-gray-600">
+                Already have an account?{" "}
+                <Link href="/login" className="text-green-600 hover:text-green-700 font-semibold hover:underline transition-colors" data-testid="link-login">
+                  Sign In
+                </Link>
+              </p>
             </div>
-            <div>
-              <Label htmlFor="password">Password</Label>
-              <Input
-                id="password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                data-testid="input-password"
-              />
-            </div>
-            <div>
-              <Label htmlFor="role">Account Type</Label>
-              <Select value={role} onValueChange={setRole}>
-                <SelectTrigger data-testid="select-role">
-                  <SelectValue placeholder="Select account type" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="user">Car Owner (Find Parking)</SelectItem>
-                  <SelectItem value="owner">Parking Owner (Rent Space)</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <Button 
-              type="submit" 
-              className="w-full" 
-              disabled={isLoading}
-              data-testid="button-submit"
-            >
-              {isLoading ? "Creating Account..." : "Create Account"}
-            </Button>
-          </form>
-          <div className="mt-4 text-center">
-            <p className="text-sm text-gray-600">
-              Already have an account?{" "}
-              <Link href="/login" className="text-primary hover:underline" data-testid="link-login">
-                Sign in
-              </Link>
-            </p>
-          </div>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }
