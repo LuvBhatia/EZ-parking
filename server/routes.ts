@@ -296,8 +296,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       const booking = await storage.createBooking({
         slotId: bookingData.slotId,
-        startTime,
-        endTime,
+        startTime: startTime,
+        endTime: endTime,
         duration: bookingData.duration,
         totalAmount: bookingData.totalAmount,
         userId: req.user!.id,

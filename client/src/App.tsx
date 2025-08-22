@@ -16,6 +16,9 @@ import Checkout from "@/pages/Checkout";
 import Bookings from "@/pages/Bookings";
 import PaymentHistory from "@/pages/PaymentHistory";
 import Profile from "@/pages/Profile";
+import OwnerSlots from "@/pages/OwnerSlots";
+import OwnerBookings from "@/pages/OwnerBookings";
+import OwnerAnalytics from "@/pages/OwnerAnalytics";
 import NotFound from "@/pages/not-found";
 
 function AppContent() {
@@ -75,6 +78,24 @@ function AppContent() {
         <Route path="/profile">
           <ProtectedRoute requiredRole={["user", "owner", "admin"]}>
             <Profile />
+          </ProtectedRoute>
+        </Route>
+        
+        <Route path="/owner/slots">
+          <ProtectedRoute requiredRole={["owner"]}>
+            <OwnerSlots />
+          </ProtectedRoute>
+        </Route>
+        
+        <Route path="/owner/bookings">
+          <ProtectedRoute requiredRole={["owner"]}>
+            <OwnerBookings />
+          </ProtectedRoute>
+        </Route>
+        
+        <Route path="/owner/analytics">
+          <ProtectedRoute requiredRole={["owner"]}>
+            <OwnerAnalytics />
           </ProtectedRoute>
         </Route>
         

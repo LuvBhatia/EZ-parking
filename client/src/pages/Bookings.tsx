@@ -88,10 +88,10 @@ export default function Bookings() {
               <Card key={booking.id} className="p-6">
                 <div className="flex justify-between items-start mb-4">
                   <div>
-                    <h3 className="text-xl font-semibold">{booking.slot.name}</h3>
+                    <h3 className="text-xl font-semibold">{booking.slot?.name || 'Slot Name'}</h3>
                     <div className="flex items-center text-gray-600 mt-1">
                       <MapPin className="mr-2" size={16} />
-                      <span>{booking.slot.address}, {booking.slot.city}</span>
+                      <span>{booking.slot?.address || 'Address'}, {booking.slot?.city || 'City'}</span>
                     </div>
                   </div>
                   {getStatusBadge(booking.status)}
@@ -124,7 +124,7 @@ export default function Bookings() {
                   
                   <div>
                     <p className="text-sm text-gray-500">Vehicle Type</p>
-                    <p className="font-medium">{booking.slot.vehicleType}</p>
+                    <p className="font-medium">{booking.slot?.vehicleType || 'N/A'}</p>
                   </div>
                 </div>
 
