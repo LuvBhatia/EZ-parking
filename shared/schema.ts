@@ -142,6 +142,9 @@ export const insertBookingSchema = createInsertSchema(bookings).omit({
   status: true,
   paymentIntentId: true,
   userId: true,
+}).extend({
+  startTime: z.string().or(z.date()),
+  endTime: z.string().or(z.date()),
 });
 
 export const insertNotificationSchema = createInsertSchema(notifications).omit({
