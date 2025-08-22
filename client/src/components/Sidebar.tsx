@@ -83,18 +83,18 @@ export default function Sidebar() {
           const isActive = location === item.href;
           
           return (
-            <Link key={item.href} href={item.href}>
-              <a 
-                className={`flex items-center px-6 py-3 transition-colors ${
-                  isActive 
-                    ? "bg-primary bg-opacity-10 text-primary border-r-2 border-primary" 
-                    : "text-gray-700 hover:bg-gray-100"
-                }`}
-                data-testid={`nav-${item.label.toLowerCase().replace(/\s+/g, '-')}`}
-              >
-                <Icon className="mr-3" size={20} />
-                {item.label}
-              </a>
+            <Link 
+              key={item.href} 
+              href={item.href}
+              className={`flex items-center px-6 py-3 transition-colors ${
+                isActive 
+                  ? "bg-primary bg-opacity-10 text-primary border-r-2 border-primary" 
+                  : "text-gray-700 hover:bg-gray-100"
+              }`}
+              data-testid={`nav-${item.label.toLowerCase().replace(/\s+/g, '-')}`}
+            >
+              <Icon className="mr-3" size={20} />
+              {item.label}
             </Link>
           );
         })}

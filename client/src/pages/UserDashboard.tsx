@@ -27,16 +27,16 @@ export default function UserDashboard() {
   const [selectedSlot, setSelectedSlot] = useState<ParkingSlot | null>(null);
   const [showBookingModal, setShowBookingModal] = useState(false);
   const [filters, setFilters] = useState({
-    city: "",
-    vehicleType: "",
+    city: "all",
+    vehicleType: "all",
   });
 
   const { data: slots = [], isLoading } = useQuery<ParkingSlot[]>({
     queryKey: ["/api/slots", filters.city, filters.vehicleType],
     queryFn: async () => {
       const params = new URLSearchParams();
-      if (filters.city) params.append("city", filters.city);
-      if (filters.vehicleType) params.append("vehicleType", filters.vehicleType);
+      if (filters.city && filters.city !== "all") params.append("city", filters.city);
+      if (filters.vehicleType && filters.vehicleType !== "all") params.append("vehicleType", filters.vehicleType);
       
       const response = await fetch(`/api/slots?${params}`, {
         headers: {
@@ -80,7 +80,7 @@ export default function UserDashboard() {
                     <SelectValue placeholder="Select city" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">All Cities</SelectItem>
+                    <SelectItem value="all">All Cities</SelectItem>
                     <SelectItem value="Mumbai">Mumbai</SelectItem>
                     <SelectItem value="Delhi">Delhi</SelectItem>
                     <SelectItem value="Bangalore">Bangalore</SelectItem>
@@ -98,7 +98,7 @@ export default function UserDashboard() {
                     <SelectValue placeholder="Select type" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">All Types</SelectItem>
+                    <SelectItem value="all">All Types</SelectItem>
                     <SelectItem value="2-wheeler">2-Wheeler</SelectItem>
                     <SelectItem value="4-wheeler">4-Wheeler</SelectItem>
                     <SelectItem value="suv">SUV/Large Car</SelectItem>
