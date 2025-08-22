@@ -73,8 +73,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
         await storage.createOwner({
           userId: user.id,
           businessName: `${username}'s Parking Business`,
-          contactNumber: "",
           address: "",
+          city: "",
+          phone: "",
           status: "pending"
         });
       }
