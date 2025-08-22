@@ -24,7 +24,7 @@ export default function Register() {
     // Get role from URL params if present
     const params = new URLSearchParams(window.location.search);
     const roleParam = params.get("role");
-    if (roleParam && ["user", "owner", "admin"].includes(roleParam)) {
+    if (roleParam && ["user", "owner"].includes(roleParam)) {
       setRole(roleParam);
     }
   }, [location]);
@@ -46,8 +46,6 @@ export default function Register() {
         setLocation("/dashboard");
       } else if (role === "owner") {
         setLocation("/owner");
-      } else if (role === "admin") {
-        setLocation("/admin");
       }
     } catch (error: any) {
       toast({
@@ -116,7 +114,6 @@ export default function Register() {
                 <SelectContent>
                   <SelectItem value="user">Car Owner (Find Parking)</SelectItem>
                   <SelectItem value="owner">Parking Owner (Rent Space)</SelectItem>
-                  <SelectItem value="admin">Administrator</SelectItem>
                 </SelectContent>
               </Select>
             </div>

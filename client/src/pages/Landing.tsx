@@ -30,7 +30,7 @@ export default function Landing() {
         <div 
           className="h-96 bg-cover bg-center relative"
           style={{
-            backgroundImage: `url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&h=600')`
+            backgroundImage: `url('https://images.unsplash.com/photo-1590674899484-d5640e854abe?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&h=600')`
           }}
         >
           <div className="absolute inset-0 bg-black bg-opacity-50"></div>

@@ -370,5 +370,30 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Create new admin user (admin only)
+  app.post("/api/admin/create-admin", authenticateToken, requireRole(["admin"]), async (req, res) => {
+    try {
+      const { username, email, password } = req.body;
+      
+      // Check if user already exists
+      const existingUser = await storage.getUserByEmail(email);
+      if (existingUser) {
+        return res.status(400).json({ message: "User with this email already exists" });
+      }
+
+      const hashedPassword = await hashPassword(password);
+      const admin = await storage.createUser({
+        username,
+        email,
+        password: hashedPassword,
+        role: "admin"
+      });
+
+      res.json({ message: "Admin user created successfully", adminId: admin.id });
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  });
+
   return httpServer;
 }
