@@ -68,6 +68,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
         password: hashedPassword,
       });
 
+      // If user is registering as owner, create owner profile
+      if (role === "owner") {
+        await storage.createOwner({
+          userId: user.id,
+          businessName: `${username}'s Parking Business`,
+          contactNumber: "",
+          address: "",
+          status: "pending"
+        });
+      }
+
       // Generate token
       const token = generateToken(user.id, user.role);
 
