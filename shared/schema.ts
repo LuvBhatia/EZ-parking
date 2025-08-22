@@ -141,6 +141,7 @@ export const insertBookingSchema = createInsertSchema(bookings).omit({
   paidAt: true,
   status: true,
   paymentIntentId: true,
+  userId: true,
 });
 
 export const insertNotificationSchema = createInsertSchema(notifications).omit({

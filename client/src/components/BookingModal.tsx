@@ -68,8 +68,8 @@ export default function BookingModal({ slot, isOpen, onClose }: BookingModalProp
         },
         body: JSON.stringify({
           slotId: slot.id,
-          startTime: startDateTime.toISOString(),
-          endTime: endDateTime.toISOString(),
+          startTime: startDateTime,
+          endTime: endDateTime,
           duration: parseInt(formData.duration),
           totalAmount: total.total,
         }),
