@@ -266,6 +266,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  app.get("/api/owner/stats", authenticateToken, requireRole(["owner"]), async (req: AuthenticatedRequest, res) => {
+    try {
+      const owner = await storage.getOwnerByUserId(req.user!.id);
+      if (!owner) {
+        return res.status(404).json({ message: "Owner profile not found" });
+      }
+
+      const stats = await storage.getOwnerStats(owner.id);
+      res.json(stats);
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  });
+
   app.post("/api/bookings", authenticateToken, requireRole(["user"]), async (req: AuthenticatedRequest, res) => {
     try {
       const bookingData = insertBookingSchema.parse(req.body);

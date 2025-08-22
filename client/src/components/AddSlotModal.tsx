@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -86,6 +86,9 @@ export default function AddSlotModal({ isOpen, onClose }: AddSlotModalProps) {
       <DialogContent className="max-w-lg" data-testid="add-slot-modal">
         <DialogHeader>
           <DialogTitle>Add New Parking Slot</DialogTitle>
+          <DialogDescription>
+            Fill in the details below to add a new parking slot to your property.
+          </DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-4">

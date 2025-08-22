@@ -55,13 +55,19 @@ export default function OwnerDashboard() {
     },
   });
 
-  // Mock stats for now - in real app this would come from API
-  const stats: OwnerStats = {
-    totalSlots: 24,
-    occupiedSlots: 18,
-    monthlyRevenue: 45280,
-    pendingRequests: bookingRequests.length,
-  };
+  const { data: stats = { totalSlots: 0, occupiedSlots: 0, monthlyRevenue: 0, pendingRequests: 0 }, isLoading: statsLoading } = useQuery<OwnerStats>({
+    queryKey: ["/api/owner/stats"],
+    queryFn: async () => {
+      const response = await fetch("/api/owner/stats", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      
+      if (!response.ok) throw new Error("Failed to fetch owner stats");
+      return response.json();
+    },
+  });
 
   const handleApproveBooking = async (bookingId: string) => {
     try {

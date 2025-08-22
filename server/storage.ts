@@ -251,6 +251,61 @@ export class DatabaseStorage implements IStorage {
       .where(eq(notifications.id, id));
   }
 
+  async getOwnerStats(ownerId: string): Promise<{
+    totalSlots: number;
+    occupiedSlots: number;
+    monthlyRevenue: number;
+    pendingRequests: number;
+  }> {
+    const [totalSlotsResult] = await db
+      .select({ count: sql<number>`count(*)` })
+      .from(parkingSlots)
+      .where(eq(parkingSlots.ownerId, ownerId));
+
+    const [occupiedSlotsResult] = await db
+      .select({ count: sql<number>`count(DISTINCT slot_id)` })
+      .from(bookings)
+      .innerJoin(parkingSlots, eq(bookings.slotId, parkingSlots.id))
+      .where(
+        and(
+          eq(parkingSlots.ownerId, ownerId),
+          eq(bookings.status, "paid")
+        )
+      );
+
+    const [pendingRequestsResult] = await db
+      .select({ count: sql<number>`count(*)` })
+      .from(bookings)
+      .innerJoin(parkingSlots, eq(bookings.slotId, parkingSlots.id))
+      .where(
+        and(
+          eq(parkingSlots.ownerId, ownerId),
+          eq(bookings.status, "pending")
+        )
+      );
+
+    const [revenueResult] = await db
+      .select({ 
+        total: sql<number>`COALESCE(SUM(CAST(total_amount AS DECIMAL)), 0)` 
+      })
+      .from(bookings)
+      .innerJoin(parkingSlots, eq(bookings.slotId, parkingSlots.id))
+      .where(
+        and(
+          eq(parkingSlots.ownerId, ownerId),
+          eq(bookings.status, "paid"),
+          sql`bookings.created_at >= date_trunc('month', current_date)`
+        )
+      );
+
+    return {
+      totalSlots: totalSlotsResult.count,
+      occupiedSlots: occupiedSlotsResult.count,
+      monthlyRevenue: Number(revenueResult.total) || 0,
+      pendingRequests: pendingRequestsResult.count,
+    };
+  }
+
   async getSystemStats(): Promise<{
     totalUsers: number;
     totalOwners: number;
