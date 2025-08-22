@@ -131,8 +131,8 @@ export default function OwnerSlots() {
       <main className="ml-64 flex-1 p-8">
         <div className="flex justify-between items-center mb-8">
           <div>
-            <h1 className="text-3xl font-bold">My Parking Slots</h1>
-            <p className="text-gray-600 mt-2">Manage your parking space inventory</p>
+            <h1 className="text-3xl font-bold">Ez Parking Slots</h1>
+            <p className="text-gray-600 mt-2">Manage your parking slots</p>
           </div>
           <Button 
             onClick={() => setShowAddModal(true)}

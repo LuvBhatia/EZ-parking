@@ -113,6 +113,15 @@ export default function AdminDashboard() {
       <Sidebar />
       
       <main className="ml-64 flex-1 p-8">
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold">Ez Parking Admin Dashboard</h1>
+          <p className="text-gray-600 mt-2">System overview and management</p>
+        </div>
+        
+        <div className="text-center mb-12">
+          <h3 className="text-3xl font-bold mb-4">Ez Parking System Overview</h3>
+          <p className="text-gray-600 max-w-2xl mx-auto">Monitor system performance and manage user accounts</p>
+        </div>
         {/* System Overview */}
         <div className="grid md:grid-cols-4 gap-6 mb-8">
           <Card>

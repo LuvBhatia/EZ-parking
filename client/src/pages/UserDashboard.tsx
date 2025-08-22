@@ -74,6 +74,10 @@ export default function UserDashboard() {
       <Sidebar />
       
       <main className="ml-64 flex-1 p-8">
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold">Ez Parking Dashboard</h1>
+          <p className="text-gray-600 mt-2">Find and book parking spots near you</p>
+        </div>
         {/* Search Section */}
         <Card className="mb-8">
           <CardHeader>

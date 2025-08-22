@@ -87,8 +87,8 @@ export default function PaymentHistory() {
       
       <main className="ml-64 flex-1 p-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold">Payment History</h1>
-          <p className="text-gray-600 mt-2">View all your completed payments</p>
+          <h1 className="text-3xl font-bold">Ez Parking Payment History</h1>
+          <p className="text-gray-600 mt-2">View all your parking payment records</p>
         </div>
 
         {isLoading ? (

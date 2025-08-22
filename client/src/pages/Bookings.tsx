@@ -67,8 +67,8 @@ export default function Bookings() {
       
       <main className="ml-64 flex-1 p-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold">My Bookings</h1>
-          <p className="text-gray-600 mt-2">Track all your parking reservations</p>
+          <h1 className="text-3xl font-bold">Ez Parking Bookings</h1>
+          <p className="text-gray-600 mt-2">Track your parking reservations</p>
         </div>
 
         {isLoading ? (

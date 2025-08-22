@@ -27,7 +27,7 @@ export default function Navbar() {
           <Link href="/">
             <a className="flex items-center" data-testid="link-home">
               <Car className="text-primary text-2xl mr-3" />
-              <h1 className="text-xl font-bold text-primary">Smart Parking System</h1>
+              <h1 className="text-xl font-bold text-primary">Ez Parking</h1>
             </a>
           </Link>
 

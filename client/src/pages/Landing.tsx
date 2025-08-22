@@ -11,7 +11,7 @@ export default function Landing() {
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center">
               <Car className="text-primary text-2xl mr-3" />
-              <h1 className="text-xl font-bold text-primary">Smart Parking System</h1>
+              <h1 className="text-xl font-bold text-primary">Ez Parking</h1>
             </div>
             <div className="flex items-center space-x-4">
               <Link href="/login">
@@ -61,7 +61,7 @@ export default function Landing() {
       <section className="py-16 bg-surface">
         <div className="max-w-7xl mx-auto px-4">
           <div className="text-center mb-12">
-            <h3 className="text-3xl font-bold mb-4">Why Choose Smart Parking?</h3>
+            <h3 className="text-3xl font-bold mb-4">Why Choose Ez Parking?</h3>
             <p className="text-gray-600 max-w-2xl mx-auto">Experience hassle-free parking with our comprehensive platform designed for users, owners, and administrators.</p>
           </div>
 

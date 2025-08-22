@@ -329,13 +329,12 @@ export class DatabaseStorage implements IStorage {
       .where(eq(parkingSlots.ownerId, ownerId));
 
     const [occupiedSlotsResult] = await db
-      .select({ count: sql<number>`count(DISTINCT slot_id)` })
-      .from(bookings)
-      .innerJoin(parkingSlots, eq(bookings.slotId, parkingSlots.id))
+      .select({ count: sql<number>`count(*)` })
+      .from(parkingSlots)
       .where(
         and(
           eq(parkingSlots.ownerId, ownerId),
-          eq(bookings.status, "paid")
+          eq(parkingSlots.isAvailable, false)
         )
       );
 

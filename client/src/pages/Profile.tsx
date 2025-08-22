@@ -67,8 +67,8 @@ export default function Profile() {
       
       <main className="ml-64 flex-1 p-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold">Profile Settings</h1>
-          <p className="text-gray-600 mt-2">Manage your account information</p>
+          <h1 className="text-3xl font-bold">Ez Parking Profile</h1>
+          <p className="text-gray-600 mt-2">Manage your account settings</p>
         </div>
 
         <div className="max-w-2xl">

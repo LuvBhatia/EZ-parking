@@ -1,7 +1,10 @@
-import bcrypt from "bcryptjs";
+import { createRequire } from "module";
 import { db } from "./db";
-import { users } from "@shared/schema";
+import { users } from "../shared/schema";
 import { eq } from "drizzle-orm";
+
+const require = createRequire(import.meta.url);
+const bcrypt = require("bcryptjs");
 
 export async function createDefaultAdmin() {
   try {

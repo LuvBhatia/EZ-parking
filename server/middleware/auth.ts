@@ -1,7 +1,10 @@
-import * as jwt from "jsonwebtoken";
-import * as bcrypt from "bcryptjs";
 import { Request, Response, NextFunction } from "express";
 import { storage } from "../storage";
+import { createRequire } from "module";
+
+const require = createRequire(import.meta.url);
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
 
 const JWT_SECRET = process.env.JWT_SECRET || "your-secret-key";
 

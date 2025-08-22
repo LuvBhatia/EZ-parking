@@ -65,7 +65,7 @@ export default function Sidebar() {
       <div className="p-6 border-b">
         <div className="flex items-center">
           <ParkingMeter className="text-primary text-2xl mr-3" />
-          <h1 className="text-lg font-bold text-primary">Smart ParkingMeter</h1>
+          <h1 className="text-lg font-bold text-primary">Ez Parking</h1>
         </div>
         <div className="mt-4">
           <p className="text-sm text-gray-600">
@@ -86,18 +86,21 @@ export default function Sidebar() {
             <Link 
               key={item.href} 
               href={item.href}
-              className={`flex items-center px-6 py-3 transition-colors ${
+              className={`flex items-center px-6 py-3 transition-all duration-200 ${
                 isActive 
-                  ? "bg-primary bg-opacity-10 text-primary border-r-2 border-primary" 
-                  : "text-gray-700 hover:bg-gray-100"
+                  ? "bg-primary text-white border-r-4 border-primary-dark shadow-md font-medium hover:bg-primary-dark" 
+                  : "text-gray-700 hover:bg-gray-50 hover:text-gray-900 hover:border-r-2 hover:border-gray-300"
               }`}
               data-testid={`nav-${item.label.toLowerCase().replace(/\s+/g, '-')}`}
             >
-              <Icon className="mr-3" size={20} />
+              <Icon className={`mr-3 ${isActive ? 'text-white' : 'text-gray-600'}`} size={20} />
               {item.label}
             </Link>
           );
         })}
+        
+        {/* Separator */}
+        <div className="border-t border-gray-200 my-4 mx-6"></div>
         
         <Button
           variant="ghost"
@@ -105,10 +108,10 @@ export default function Sidebar() {
             console.log("🔘 Logout button clicked");
             logout();
           }}
-          className="flex items-center px-6 py-3 text-gray-700 hover:bg-gray-100 w-full justify-start"
+          className="flex items-center px-6 py-3 text-gray-700 hover:bg-red-50 hover:text-red-700 w-full justify-start transition-all duration-200"
           data-testid="button-logout"
         >
-          <LogOut className="mr-3" size={20} />
+          <LogOut className="mr-3 text-gray-600" size={20} />
           Logout
         </Button>
       </nav>
