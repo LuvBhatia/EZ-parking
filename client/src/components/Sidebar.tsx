@@ -101,7 +101,10 @@ export default function Sidebar() {
         
         <Button
           variant="ghost"
-          onClick={logout}
+          onClick={() => {
+            console.log("🔘 Logout button clicked");
+            logout();
+          }}
           className="flex items-center px-6 py-3 text-gray-700 hover:bg-gray-100 w-full justify-start"
           data-testid="button-logout"
         >

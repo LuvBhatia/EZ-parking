@@ -4,6 +4,23 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Hide protected routes during logout */
+.protected-routes.logging-out {
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+}
+
+/* Smooth transitions */
+.protected-routes {
+  transition: opacity 0.1s ease-out;
+}
+
+/* Ensure no flash during logout */
+body.logging-out .protected-routes {
+  display: none !important;
+}
+
 :root {
   --background: hsl(0 0% 100%);
   --foreground: hsl(210 25% 7.8431%);

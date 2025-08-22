@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { Search, MapPin, Car, Clock, Shield, Sun } from "lucide-react";
+import { Search, MapPin, Car, Clock, Shield, Sun, RefreshCw } from "lucide-react";
 
 interface ParkingSlot {
   id: string;
@@ -32,8 +32,11 @@ export default function UserDashboard() {
   });
 
   const { data: slots = [], isLoading } = useQuery<ParkingSlot[]>({
-    queryKey: ["/api/slots", filters.city, filters.vehicleType],
+    queryKey: ["slots", "available", filters.city, filters.vehicleType],
     queryFn: async () => {
+      console.log("🔄 UserDashboard: Fetching available slots");
+      console.log("Filters:", filters);
+      
       const params = new URLSearchParams();
       if (filters.city && filters.city !== "all") params.append("city", filters.city);
       if (filters.vehicleType && filters.vehicleType !== "all") params.append("vehicleType", filters.vehicleType);
@@ -45,8 +48,13 @@ export default function UserDashboard() {
       });
       
       if (!response.ok) throw new Error("Failed to fetch slots");
-      return response.json();
+      const data = await response.json();
+      console.log("✅ UserDashboard: Received slots:", data.length, "slots");
+      console.log("Sample slot:", data[0]);
+      return data;
     },
+    refetchInterval: 10000, // Refresh every 10 seconds
+    refetchIntervalInBackground: true,
   });
 
   const handleBookNow = (slot: ParkingSlot) => {
@@ -126,6 +134,21 @@ export default function UserDashboard() {
                   </SelectContent>
                 </Select>
               </div>
+            </div>
+            
+            <div className="flex justify-between items-center mt-4">
+              <div className="text-sm text-gray-600">
+                Showing {slots.length} available parking slots
+              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => window.location.reload()}
+                className="flex items-center gap-2"
+              >
+                <RefreshCw className="h-4 w-4" />
+                Refresh Slots
+              </Button>
             </div>
           </CardContent>
         </Card>

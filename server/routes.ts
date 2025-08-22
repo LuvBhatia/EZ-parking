@@ -11,7 +11,7 @@ import {
   generateToken,
   type AuthenticatedRequest 
 } from "./middleware/auth";
-import { insertUserSchema, insertOwnerSchema, insertParkingSlotSchema, insertBookingSchema } from "@shared/schema";
+import { insertUserSchema, insertOwnerSchema, insertParkingSlotSchema, insertBookingSchema } from "../shared/schema";
 
 if (!process.env.STRIPE_SECRET_KEY) {
   throw new Error('Missing required Stripe secret: STRIPE_SECRET_KEY');
@@ -225,6 +225,103 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json(slot);
     } catch (error: any) {
       res.status(400).json({ message: error.message });
+    }
+  });
+
+  // Update slot availability (PATCH)
+  app.patch("/api/slots/:id", authenticateToken, requireRole(["owner"]), async (req: AuthenticatedRequest, res) => {
+    try {
+      const { id } = req.params;
+      const { isAvailable } = req.body;
+      
+      console.log("🔄 PATCH /api/slots/:id called");
+      console.log("Slot ID:", id);
+      console.log("New availability:", isAvailable);
+      console.log("Request body:", req.body);
+      
+      // Verify the slot belongs to the authenticated owner
+      const owner = await storage.getOwnerByUserId(req.user!.id);
+      if (!owner) {
+        console.log("❌ Owner profile not found for user:", req.user!.id);
+        return res.status(404).json({ message: "Owner profile not found" });
+      }
+      console.log("✅ Owner found:", owner.id);
+
+      const slot = await storage.getSlotById(id);
+      if (!slot) {
+        console.log("❌ Slot not found:", id);
+        return res.status(404).json({ message: "Slot not found" });
+      }
+      console.log("✅ Slot found:", slot.id, "Current availability:", slot.isAvailable);
+
+      if (slot.ownerId !== owner.id) {
+        console.log("❌ Unauthorized: Slot owner:", slot.ownerId, "User owner:", owner.id);
+        return res.status(403).json({ message: "Not authorized to modify this slot" });
+      }
+      console.log("✅ Authorization verified");
+
+      const updatedSlot = await storage.updateSlotAvailability(id, isAvailable);
+      console.log("✅ Slot updated successfully:", updatedSlot.id, "New availability:", updatedSlot.isAvailable);
+      
+      res.json(updatedSlot);
+    } catch (error: any) {
+      console.error("❌ Error updating slot availability:", error);
+      res.status(500).json({ message: error.message });
+    }
+  });
+
+  // Update slot details (PUT)
+  app.put("/api/slots/:id", authenticateToken, requireRole(["owner"]), async (req: AuthenticatedRequest, res) => {
+    try {
+      const { id } = req.params;
+      const updateData = req.body;
+      
+      // Verify the slot belongs to the authenticated owner
+      const owner = await storage.getOwnerByUserId(req.user!.id);
+      if (!owner) {
+        return res.status(404).json({ message: "Owner profile not found" });
+      }
+
+      const slot = await storage.getSlotById(id);
+      if (!slot) {
+        return res.status(404).json({ message: "Slot not found" });
+      }
+
+      if (slot.ownerId !== owner.id) {
+        return res.status(403).json({ message: "Not authorized to modify this slot" });
+      }
+
+      const updatedSlot = await storage.updateSlot(id, updateData);
+      res.json(updatedSlot);
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  });
+
+  // Delete slot (DELETE)
+  app.delete("/api/slots/:id", authenticateToken, requireRole(["owner"]), async (req: AuthenticatedRequest, res) => {
+    try {
+      const { id } = req.params;
+      
+      // Verify the slot belongs to the authenticated owner
+      const owner = await storage.getOwnerByUserId(req.user!.id);
+      if (!owner) {
+        return res.status(404).json({ message: "Owner profile not found" });
+      }
+
+      const slot = await storage.getSlotById(id);
+      if (!slot) {
+        return res.status(404).json({ message: "Slot not found" });
+      }
+
+      if (slot.ownerId !== owner.id) {
+        return res.status(403).json({ message: "Not authorized to delete this slot" });
+      }
+
+      await storage.deleteSlot(id);
+      res.json({ message: "Slot deleted successfully" });
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
     }
   });
 

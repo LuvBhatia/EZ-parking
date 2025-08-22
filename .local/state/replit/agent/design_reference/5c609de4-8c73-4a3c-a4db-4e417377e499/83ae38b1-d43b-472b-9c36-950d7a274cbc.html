@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Parking System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'inter': ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#1976D2',
+                        'primary-dark': '#1565C0',
+                        secondary: '#FFC107',
+                        success: '#4CAF50',
+                        error: '#F44336',
+                        warning: '#FF9800',
+                        surface: '#FFFFFF',
+                        background: '#FAFAFA',
+                    }
+                }
+            }
+        };
+    </script>
+</head>
+<body class="font-inter bg-background text-gray-800">
+
+    <!-- Landing Page -->
+    <div id="landing-page" class="min-h-screen">
+        <!-- Header -->
+        <header class="bg-surface shadow-sm border-b">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between items-center h-16">
+                    <div class="flex items-center">
+                        <i class="fas fa-parking text-primary text-2xl mr-3"></i>
+                        <h1 class="text-xl font-bold text-primary">Smart Parking System</h1>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <button onclick="showLogin()" class="text-gray-700 hover:text-primary font-medium">Login</button>
+                        <button onclick="showRegister()" class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary-dark transition-colors">Get Started</button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Hero Section -->
+        <section class="relative">
+            <!-- A modern multi-level parking garage with clear lane markings and LED lighting -->
+            <div class="h-96 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&h=600');">
+                <div class="absolute inset-0 bg-black bg-opacity-50"></div>
+                <div class="relative max-w-7xl mx-auto px-4 h-full flex items-center">
+                    <div class="text-white max-w-2xl">
+                        <h2 class="text-4xl md:text-5xl font-bold mb-4">Find Perfect Parking Spots Instantly</h2>
+                        <p class="text-xl mb-8">Book, pay, and park with ease. Join thousands of users and parking owners in India's smartest parking network.</p>
+                        <div class="flex flex-col sm:flex-row gap-4">
+                            <button onclick="showUserDashboard()" class="bg-primary text-white px-8 py-3 rounded-lg hover:bg-primary-dark transition-colors font-medium">
+                                <i class="fas fa-car mr-2"></i>Find Parking
+                            </button>
+                            <button onclick="showOwnerDashboard()" class="bg-white text-primary px-8 py-3 rounded-lg hover:bg-gray-100 transition-colors font-medium">
+                                <i class="fas fa-building mr-2"></i>List Your Space
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="py-16 bg-surface">
+            <div class="max-w-7xl mx-auto px-4">
+                <div class="text-center mb-12">
+                    <h3 class="text-3xl font-bold mb-4">Why Choose Smart Parking?</h3>
+                    <p class="text-gray-600 max-w-2xl mx-auto">Experience hassle-free parking with our comprehensive platform designed for users, owners, and administrators.</p>
+                </div>
+
+                <div class="grid md:grid-cols-3 gap-8">
+                    <div class="text-center p-6">
+                        <div class="bg-primary bg-opacity-10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-clock text-primary text-2xl"></i>
+                        </div>
+                        <h4 class="text-xl font-semibold mb-2">Real-Time Availability</h4>
+                        <p class="text-gray-600">See available parking spots in real-time and book instantly for your preferred duration.</p>
+                    </div>
+
+                    <div class="text-center p-6">
+                        <div class="bg-success bg-opacity-10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-shield-alt text-success text-2xl"></i>
+                        </div>
+                        <h4 class="text-xl font-semibold mb-2">Secure Payments</h4>
+                        <p class="text-gray-600">Safe and secure payment processing with detailed receipts in Indian Rupees (₹).</p>
+                    </div>
+
+                    <div class="text-center p-6">
+                        <div class="bg-secondary bg-opacity-10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-mobile-alt text-secondary text-2xl"></i>
+                        </div>
+                        <h4 class="text-xl font-semibold mb-2">Easy Management</h4>
+                        <p class="text-gray-600">Intuitive dashboards for users to book and owners to manage their parking spaces.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- User Dashboard -->
+    <div id="user-dashboard" class="hidden min-h-screen bg-background">
+        <!-- @COMPONENT: UserDashboard [userId, userType] -->
+        <div class="flex">
+            <!-- Sidebar -->
+            <aside class="w-64 bg-surface shadow-lg h-screen fixed">
+                <div class="p-6 border-b">
+                    <div class="flex items-center">
+                        <i class="fas fa-parking text-primary text-2xl mr-3"></i>
+                        <h1 class="text-lg font-bold text-primary">Smart Parking</h1>
+                    </div>
+                    <div class="mt-4">
+                        <p class="text-sm text-gray-600">Welcome back,</p>
+                        <p class="font-semibold" data-bind="user.name">Rajesh Kumar</p>
+                    </div>
+                </div>
+
+                <nav class="mt-6">
+                    <a href="#" class="flex items-center px-6 py-3 bg-primary bg-opacity-10 text-primary border-r-2 border-primary">
+                        <i class="fas fa-search mr-3"></i>
+                        Find Parking
+                    </a>
+                    <a href="#" class="flex items-center px-6 py-3 text-gray-700 hover:bg-gray-100">
+                        <i class="fas fa-calendar-alt mr-3"></i>
+                        My Bookings
+                    </a>
+                    <a href="#" class="flex items-center px-6 py-3 text-gray-700 hover:bg-gray-100">
+                        <i class="fas fa-wallet mr-3"></i>
+                        Payment History
+                    </a>
+                    <a href="#" class="flex items-center px-6 py-3 text-gray-700 hover:bg-gray-100">
+                        <i class="fas fa-user mr-3"></i>
+                        Profile
+                    </a>
+                    <a href="#" onclick="showLanding()" class="flex items-center px-6 py-3 text-gray-700 hover:bg-gray-100">
+                        <i class="fas fa-sign-out-alt mr-3"></i>
+                        Logout
+                    </a>
+                </nav>
+            </aside>
+
+            <!-- Main Content -->
+            <main class="ml-64 flex-1 p-8">
+                <!-- Search Section -->
+                <div class="bg-surface rounded-lg shadow-sm p-6 mb-8">
+                    <h2 class="text-2xl font-bold mb-6">Find Available Parking</h2>
+                    
+                    <div class="grid md:grid-cols-4 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Location</label>
+                            <select class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-primary focus:border-transparent">
+                                <option>Mumbai - Andheri</option>
+                                <option>Mumbai - Bandra</option>
+                                <option>Delhi - CP</option>
+                                <option>Bangalore - Koramangala</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Vehicle Type</label>
+                            <select class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-primary focus:border-transparent">
+                                <option>2-Wheeler</option>
+                                <option>4-Wheeler</option>
+                                <option>SUV/Large Car</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Date & Time</label>
+                            <input type="datetime-local" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-primary focus:border-transparent">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Duration</label>
+                            <select class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-primary focus:border-transparent">
+                                <option>1 Hour</option>
+                                <option>2 Hours</option>
+                                <option>4 Hours</option>
+                                <option>8 Hours</option>
+                                <option>Full Day</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <button class="mt-4 bg-primary text-white px-6 py-2 rounded-lg hover:bg-primary-dark transition-colors">
+                        <i class="fas fa-search mr-2"></i>Search Parking
+                    </button>
+                </div>
+
+                <!-- Available Slots -->
+                <div class="bg-surface rounded-lg shadow-sm p-6">
+                    <h3 class="text-xl font-bold mb-6">Available Parking Slots</h3>
+                    
+                    <!-- @MAP: availableSlots.map(slot => ( -->
+                    <div class="border border-gray-200 rounded-lg p-4 mb-4 hover:shadow-md transition-shadow">
+                        <div class="flex justify-between items-start">
+                            <div class="flex-1">
+                                <div class="flex items-center mb-2">
+                                    <h4 class="text-lg font-semibold mr-4" data-bind="slot.name">Metro Mall Parking</h4>
+                                    <span class="bg-success bg-opacity-10 text-success px-2 py-1 rounded-full text-sm font-medium">Available</span>
+                                </div>
+                                
+                                <div class="flex items-center text-gray-600 mb-2">
+                                    <i class="fas fa-map-marker-alt mr-2"></i>
+                                    <span data-bind="slot.address">Shop No. 45, Andheri West, Mumbai</span>
+                                </div>
+                                
+                                <div class="flex items-center space-x-6 text-sm text-gray-600">
+                                    <span><i class="fas fa-car mr-1"></i> <span data-bind="slot.vehicleType">4-Wheeler</span></span>
+                                    <span><i class="fas fa-clock mr-1"></i> Available Now</span>
+                                    <span><i class="fas fa-shield-alt mr-1"></i> Covered</span>
+                                </div>
+                            </div>
+                            
+                            <div class="text-right">
+                                <div class="text-2xl font-bold text-primary mb-2">₹<span data-bind="slot.pricePerHour">50</span>/hr</div>
+                                <button onclick="showBookingModal()" class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary-dark transition-colors">
+                                    Book Now
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- @END_MAP )) -->
+
+                    <div class="border border-gray-200 rounded-lg p-4 mb-4 hover:shadow-md transition-shadow">
+                        <div class="flex justify-between items-start">
+                            <div class="flex-1">
+                                <div class="flex items-center mb-2">
+                                    <h4 class="text-lg font-semibold mr-4">City Center Plaza</h4>
+                                    <span class="bg-warning bg-opacity-10 text-warning px-2 py-1 rounded-full text-sm font-medium">Few Left</span>
+                                </div>
+                                
+                                <div class="flex items-center text-gray-600 mb-2">
+                                    <i class="fas fa-map-marker-alt mr-2"></i>
+                                    <span>Building 12, Andheri East, Mumbai</span>
+                                </div>
+                                
+                                <div class="flex items-center space-x-6 text-sm text-gray-600">
+                                    <span><i class="fas fa-car mr-1"></i> 4-Wheeler</span>
+                                    <span><i class="fas fa-clock mr-1"></i> Available Now</span>
+                                    <span><i class="fas fa-sun mr-1"></i> Open</span>
+                                </div>
+                            </div>
+                            
+                            <div class="text-right">
+                                <div class="text-2xl font-bold text-primary mb-2">₹40/hr</div>
+                                <button onclick="showBookingModal()" class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary-dark transition-colors">
+                                    Book Now
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="border border-gray-200 rounded-lg p-4 mb-4 hover:shadow-md transition-shadow">
+                        <div class="flex justify-between items-start">
+                            <div class="flex-1">
+                                <div class="flex items-center mb-2">
+                                    <h4 class="text-lg font-semibold mr-4">Business Hub Parking</h4>
+                                    <span class="bg-success bg-opacity-10 text-success px-2 py-1 rounded-full text-sm font-medium">Available</span>
+                                </div>
+                                
+                                <div class="flex items-center text-gray-600 mb-2">
+                                    <i class="fas fa-map-marker-alt mr-2"></i>
+                                    <span>Tower A, Andheri West, Mumbai</span>
+                                </div>
+                                
+                                <div class="flex items-center space-x-6 text-sm text-gray-600">
+                                    <span><i class="fas fa-car mr-1"></i> 4-Wheeler</span>
+                                    <span><i class="fas fa-clock mr-1"></i> Available Now</span>
+                                    <span><i class="fas fa-shield-alt mr-1"></i> Covered</span>
+                                </div>
+                            </div>
+                            
+                            <div class="text-right">
+                                <div class="text-2xl font-bold text-primary mb-2">₹75/hr</div>
+                                <button onclick="showBookingModal()" class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary-dark transition-colors">
+                                    Book Now
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+        <!-- @END_COMPONENT: UserDashboard -->
+    </div>
+
+    <!-- Owner Dashboard -->
+    <div id="owner-dashboard" class="hidden min-h-screen bg-background">
+        <!-- @COMPONENT: OwnerDashboard [ownerId, ownerData] -->
+        <div class="flex">
+            <!-- Sidebar -->
+            <aside class="w-64 bg-surface shadow-lg h-screen fixed">
+                <div class="p-6 border-b">
+                    <div class="flex items-center">
+                        <i class="fas fa-parking text-primary text-2xl mr-3"></i>
+                        <h1 class="text-lg font-bold text-primary">Smart Parking</h1>
+                    </div>
+                    <div class="mt-4">
+                        <p class="text-sm text-gray-600">Parking Owner</p>
+                        <p class="font-semibold" data-bind="owner.name">Priya Sharma</p>
+                    </div>
+                </div>
+
+                <nav class="mt-6">
+                    <a href="#" class="flex items-center px-6 py-3 bg-primary bg-opacity-10 text-primary border-r-2 border-primary">
+                        <i class="fas fa-tachometer-alt mr-3"></i>
+                        Dashboard
+                    </a>
+                    <a href="#" class="flex items-center px-6 py-3 text-gray-700 hover:bg-gray-100">
+                        <i class="fas fa-parking mr-3"></i>
+                        My Parking Slots
+                    </a>
+                    <a href="#" class="flex items-center px-6 py-3 text-gray-700 hover:bg-gray-100">
+                        <i class="fas fa-calendar-check mr-3"></i>
+                        Booking Requests
+                    </a>
+                    <a href="#" class="flex items-center px-6 py-3 text-gray-700 hover:bg-gray-100">
+                        <i class="fas fa-chart-line mr-3"></i>
+                        Analytics
+                    </a>
+                    <a href="#" class="flex items-center px-6 py-3 text-gray-700 hover:bg-gray-100">
+                        <i class="fas fa-user mr-3"></i>
+                        Profile
+                    </a>
+                    <a href="#" onclick="showLanding()" class="flex items-center px-6 py-3 text-gray-700 hover:bg-gray-100">
+                        <i class="fas fa-sign-out-alt mr-3"></i>
+                        Logout
+                    </a>
+                </nav>
+            </aside>
+
+            <!-- Main Content -->
+            <main class="ml-64 flex-1 p-8">
+                <!-- Stats Cards -->
+                <div class="grid md:grid-cols-4 gap-6 mb-8">
+                    <div class="bg-surface rounded-lg shadow-sm p-6">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm text-gray-600">Total Slots</p>
+                                <p class="text-3xl font-bold text-primary" data-bind="stats.totalSlots">24</p>
+                            </div>
+                            <i class="fas fa-parking text-primary text-3xl"></i>
+                        </div>
+                    </div>
+
+                    <div class="bg-surface rounded-lg shadow-sm p-6">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm text-gray-600">Occupied</p>
+                                <p class="text-3xl font-bold text-warning" data-bind="stats.occupiedSlots">18</p>
+                            </div>
+                            <i class="fas fa-car text-warning text-3xl"></i>
+                        </div>
+                    </div>
+
+                    <div class="bg-surface rounded-lg shadow-sm p-6">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm text-gray-600">Monthly Revenue</p>
+                                <p class="text-3xl font-bold text-success">₹<span data-bind="stats.monthlyRevenue">45,280</span></p>
+                            </div>
+                            <i class="fas fa-rupee-sign text-success text-3xl"></i>
+                        </div>
+                    </div>
+
+                    <div class="bg-surface rounded-lg shadow-sm p-6">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm text-gray-600">Pending Requests</p>
+                                <p class="text-3xl font-bold text-secondary" data-bind="stats.pendingRequests">7</p>
+                            </div>
+                            <i class="fas fa-clock text-secondary text-3xl"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="bg-surface rounded-lg shadow-sm p-6 mb-8">
+                    <h3 class="text-xl font-bold mb-4">Quick Actions</h3>
+                    <div class="flex space-x-4">
+                        <button onclick="showAddSlotModal()" class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary-dark transition-colors">
+                            <i class="fas fa-plus mr-2"></i>Add New Slot
+                        </button>
+                        <button class="bg-secondary text-white px-4 py-2 rounded-lg hover:bg-yellow-600 transition-colors">
+                            <i class="fas fa-edit mr-2"></i>Update Pricing
+                        </button>
+                        <button class="bg-success text-white px-4 py-2 rounded-lg hover:bg-green-600 transition-colors">
+                            <i class="fas fa-download mr-2"></i>Export Report
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Recent Booking Requests -->
+                <div class="bg-surface rounded-lg shadow-sm p-6">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-xl font-bold">Recent Booking Requests</h3>
+                        <button class="text-primary hover:text-primary-dark">View All</button>
+                    </div>
+                    
+                    <div class="overflow-x-auto">
+                        <table class="w-full">
+                            <thead>
+                                <tr class="border-b border-gray-200">
+                                    <th class="text-left py-3 px-4 font-semibold">User</th>
+                                    <th class="text-left py-3 px-4 font-semibold">Slot</th>
+                                    <th class="text-left py-3 px-4 font-semibold">Date & Time</th>
+                                    <th class="text-left py-3 px-4 font-semibold">Duration</th>
+                                    <th class="text-left py-3 px-4 font-semibold">Amount</th>
+                                    <th class="text-left py-3 px-4 font-semibold">Status</th>
+                                    <th class="text-left py-3 px-4 font-semibold">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- @MAP: bookingRequests.map(request => ( -->
+                                <tr class="border-b border-gray-100 hover:bg-gray-50">
+                                    <td class="py-3 px-4">
+                                        <div>
+                                            <p class="font-medium" data-bind="request.userName">Amit Patel</p>
+                                            <p class="text-sm text-gray-600" data-bind="request.userEmail">amit@example.com</p>
+                                        </div>
+                                    </td>
+                                    <td class="py-3 px-4" data-bind="request.slotName">A-12</td>
+                                    <td class="py-3 px-4">
+                                        <p data-bind="request.date">Today</p>
+                                        <p class="text-sm text-gray-600" data-bind="request.time">2:00 PM</p>
+                                    </td>
+                                    <td class="py-3 px-4" data-bind="request.duration">3 hours</td>
+                                    <td class="py-3 px-4 font-semibold">₹<span data-bind="request.amount">150</span></td>
+                                    <td class="py-3 px-4">
+                                        <span class="bg-warning bg-opacity-10 text-warning px-2 py-1 rounded-full text-sm font-medium">Pending</span>
+                                    </td>
+                                    <td class="py-3 px-4">
+                                        <div class="flex space-x-2">
+                                            <button class="bg-success text-white px-3 py-1 rounded text-sm hover:bg-green-600 transition-colors">
+                                                Approve
+                                            </button>
+                                            <button class="bg-error text-white px-3 py-1 rounded text-sm hover:bg-red-600 transition-colors">
+                                                Reject
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <!-- @END_MAP )) -->
+
+                                <tr class="border-b border-gray-100 hover:bg-gray-50">
+                                    <td class="py-3 px-4">
+                                        <div>
+                                            <p class="font-medium">Sneha Reddy</p>
+                                            <p class="text-sm text-gray-600">sneha@example.com</p>
+                                        </div>
+                                    </td>
+                                    <td class="py-3 px-4">B-05</td>
+                                    <td class="py-3 px-4">
+                                        <p>Tomorrow</p>
+                                        <p class="text-sm text-gray-600">10:00 AM</p>
+                                    </td>
+                                    <td class="py-3 px-4">5 hours</td>
+                                    <td class="py-3 px-4 font-semibold">₹250</td>
+                                    <td class="py-3 px-4">
+                                        <span class="bg-success bg-opacity-10 text-success px-2 py-1 rounded-full text-sm font-medium">Approved</span>
+                                    </td>
+                                    <td class="py-3 px-4">
+                                        <span class="text-gray-400 text-sm">Approved</span>
+                                    </td>
+                                </tr>
+
+                                <tr class="border-b border-gray-100 hover:bg-gray-50">
+                                    <td class="py-3 px-4">
+                                        <div>
+                                            <p class="font-medium">Karan Singh</p>
+                                            <p class="text-sm text-gray-600">karan@example.com</p>
+                                        </div>
+                                    </td>
+                                    <td class="py-3 px-4">C-08</td>
+                                    <td class="py-3 px-4">
+                                        <p>Today</p>
+                                        <p class="text-sm text-gray-600">6:00 PM</p>
+                                    </td>
+                                    <td class="py-3 px-4">2 hours</td>
+                                    <td class="py-3 px-4 font-semibold">₹100</td>
+                                    <td class="py-3 px-4">
+                                        <span class="bg-warning bg-opacity-10 text-warning px-2 py-1 rounded-full text-sm font-medium">Pending</span>
+                                    </td>
+                                    <td class="py-3 px-4">
+                                        <div class="flex space-x-2">
+                                            <button class="bg-success text-white px-3 py-1 rounded text-sm hover:bg-green-600 transition-colors">
+                                                Approve
+                                            </button>
+                                            <button class="bg-error text-white px-3 py-1 rounded text-sm hover:bg-red-600 transition-colors">
+                                                Reject
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </main>
+        </div>
+        <!-- @END_COMPONENT: OwnerDashboard -->
+    </div>
+
+    <!-- Admin Dashboard -->
+    <div id="admin-dashboard" class="hidden min-h-screen bg-background">
+        <!-- @COMPONENT: AdminDashboard [adminId, systemStats] -->
+        <div class="flex">
+            <!-- Sidebar -->
+            <aside class="w-64 bg-surface shadow-lg h-screen fixed">
+                <div class="p-6 border-b">
+                    <div class="flex items-center">
+                        <i class="fas fa-parking text-primary text-2xl mr-3"></i>
+                        <h1 class="text-lg font-bold text-primary">Smart Parking</h1>
+                    </div>
+                    <div class="mt-4">
+                        <p class="text-sm text-gray-600">System Administrator</p>
+                        <p class="font-semibold" data-bind="admin.name">Admin User</p>
+                    </div>
+                </div>
+
+                <nav class="mt-6">
+                    <a href="#" class="flex items-center px-6 py-3 bg-primary bg-opacity-10 text-primary border-r-2 border-primary">
+                        <i class="fas fa-tachometer-alt mr-3"></i>
+                        Dashboard
+                    </a>
+                    <a href="#" class="flex items-center px-6 py-3 text-gray-700 hover:bg-gray-100">
+                        <i class="fas fa-users mr-3"></i>
+                        User Management
+                    </a>
+                    <a href="#" class="flex items-center px-6 py-3 text-gray-700 hover:bg-gray-100">
+                        <i class="fas fa-building mr-3"></i>
+                        Owner Management
+                    </a>
+                    <a href="#" class="flex items-center px-6 py-3 text-gray-700 hover:bg-gray-100">
+                        <i class="fas fa-chart-bar mr-3"></i>
+                        System Analytics
+                    </a>
+                    <a href="#" class="flex items-center px-6 py-3 text-gray-700 hover:bg-gray-100">
+                        <i class="fas fa-exclamation-triangle mr-3"></i>
+                        Disputes
+                    </a>
+                    <a href="#" onclick="showLanding()" class="flex items-center px-6 py-3 text-gray-700 hover:bg-gray-100">
+                        <i class="fas fa-sign-out-alt mr-3"></i>
+                        Logout
+                    </a>
+                </nav>
+            </aside>
+
+            <!-- Main Content -->
+            <main class="ml-64 flex-1 p-8">
+                <!-- System Overview -->
+                <div class="grid md:grid-cols-4 gap-6 mb-8">
+                    <div class="bg-surface rounded-lg shadow-sm p-6">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm text-gray-600">Total Users</p>
+                                <p class="text-3xl font-bold text-primary" data-bind="systemStats.totalUsers">2,847</p>
+                            </div>
+                            <i class="fas fa-users text-primary text-3xl"></i>
+                        </div>
+                        <p class="text-sm text-success mt-2">↗️ +12% this month</p>
+                    </div>
+
+                    <div class="bg-surface rounded-lg shadow-sm p-6">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm text-gray-600">Parking Owners</p>
+                                <p class="text-3xl font-bold text-secondary" data-bind="systemStats.totalOwners">156</p>
+                            </div>
+                            <i class="fas fa-building text-secondary text-3xl"></i>
+                        </div>
+                        <p class="text-sm text-success mt-2">↗️ +8% this month</p>
+                    </div>
+
+                    <div class="bg-surface rounded-lg shadow-sm p-6">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm text-gray-600">Active Bookings</p>
+                                <p class="text-3xl font-bold text-warning" data-bind="systemStats.activeBookings">1,234</p>
+                            </div>
+                            <i class="fas fa-calendar-check text-warning text-3xl"></i>
+                        </div>
+                        <p class="text-sm text-success mt-2">↗️ +5% today</p>
+                    </div>
+
+                    <div class="bg-surface rounded-lg shadow-sm p-6">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm text-gray-600">Revenue (This Month)</p>
+                                <p class="text-3xl font-bold text-success">₹<span data-bind="systemStats.monthlyRevenue">8,45,000</span></p>
+                            </div>
+                            <i class="fas fa-rupee-sign text-success text-3xl"></i>
+                        </div>
+                        <p class="text-sm text-success mt-2">↗️ +18% vs last month</p>
+                    </div>
+                </div>
+
+                <!-- Recent Activities -->
+                <div class="grid md:grid-cols-2 gap-8">
+                    <!-- Pending Owner Approvals -->
+                    <div class="bg-surface rounded-lg shadow-sm p-6">
+                        <h3 class="text-xl font-bold mb-4">Pending Owner Approvals</h3>
+                        
+                        <!-- @MAP: pendingOwners.map(owner => ( -->
+                        <div class="border border-gray-200 rounded-lg p-4 mb-4">
+                            <div class="flex justify-between items-start mb-3">
+                                <div>
+                                    <h4 class="font-semibold" data-bind="owner.name">Vikram Enterprises</h4>
+                                    <p class="text-sm text-gray-600" data-bind="owner.email">vikram@example.com</p>
+                                </div>
+                                <span class="bg-warning bg-opacity-10 text-warning px-2 py-1 rounded-full text-xs font-medium">Pending</span>
+                            </div>
+                            
+                            <div class="text-sm text-gray-600 mb-3">
+                                <p><i class="fas fa-map-marker-alt mr-2"></i><span data-bind="owner.location">Sector 18, Noida</span></p>
+                                <p><i class="fas fa-parking mr-2"></i><span data-bind="owner.totalSlots">30</span> parking slots</p>
+                            </div>
+                            
+                            <div class="flex space-x-2">
+                                <button class="bg-success text-white px-3 py-1 rounded text-sm hover:bg-green-600 transition-colors">
+                                    Approve
+                                </button>
+                                <button class="bg-error text-white px-3 py-1 rounded text-sm hover:bg-red-600 transition-colors">
+                                    Reject
+                                </button>
+                                <button class="border border-gray-300 text-gray-700 px-3 py-1 rounded text-sm hover:bg-gray-100 transition-colors">
+                                    View Details
+                                </button>
+                            </div>
+                        </div>
+                        <!-- @END_MAP )) -->
+
+                        <div class="border border-gray-200 rounded-lg p-4 mb-4">
+                            <div class="flex justify-between items-start mb-3">
+                                <div>
+                                    <h4 class="font-semibold">Mumbai Parking Solutions</h4>
+                                    <p class="text-sm text-gray-600">mumbai@example.com</p>
+                                </div>
+                                <span class="bg-warning bg-opacity-10 text-warning px-2 py-1 rounded-full text-xs font-medium">Pending</span>
+                            </div>
+                            
+                            <div class="text-sm text-gray-600 mb-3">
+                                <p><i class="fas fa-map-marker-alt mr-2"></i>Bandra West, Mumbai</p>
+                                <p><i class="fas fa-parking mr-2"></i>50 parking slots</p>
+                            </div>
+                            
+                            <div class="flex space-x-2">
+                                <button class="bg-success text-white px-3 py-1 rounded text-sm hover:bg-green-600 transition-colors">
+                                    Approve
+                                </button>
+                                <button class="bg-error text-white px-3 py-1 rounded text-sm hover:bg-red-600 transition-colors">
+                                    Reject
+                                </button>
+                                <button class="border border-gray-300 text-gray-700 px-3 py-1 rounded text-sm hover:bg-gray-100 transition-colors">
+                                    View Details
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent System Activity -->
+                    <div class="bg-surface rounded-lg shadow-sm p-6">
+                        <h3 class="text-xl font-bold mb-4">Recent System Activity</h3>
+                        
+                        <div class="space-y-4">
+                            <!-- @MAP: recentActivities.map(activity => ( -->
+                            <div class="flex items-start space-x-3" data-bind="activity">
+                                <div class="bg-primary bg-opacity-10 w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0">
+                                    <i class="fas fa-user-plus text-primary text-sm"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <p class="text-sm">New user registered: <span class="font-semibold">Arjun Mehta</span></p>
+                                    <p class="text-xs text-gray-500">2 minutes ago</p>
+                                </div>
+                            </div>
+                            <!-- @END_MAP )) -->
+
+                            <div class="flex items-start space-x-3">
+                                <div class="bg-success bg-opacity-10 w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0">
+                                    <i class="fas fa-check text-success text-sm"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <p class="text-sm">Payment processed: ₹250 from <span class="font-semibold">Neha Gupta</span></p>
+                                    <p class="text-xs text-gray-500">5 minutes ago</p>
+                                </div>
+                            </div>
+
+                            <div class="flex items-start space-x-3">
+                                <div class="bg-warning bg-opacity-10 w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0">
+                                    <i class="fas fa-building text-warning text-sm"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <p class="text-sm">New parking space listed: <span class="font-semibold">Tech Park Plaza</span></p>
+                                    <p class="text-xs text-gray-500">12 minutes ago</p>
+                                </div>
+                            </div>
+
+                            <div class="flex items-start space-x-3">
+                                <div class="bg-error bg-opacity-10 w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0">
+                                    <i class="fas fa-exclamation-triangle text-error text-sm"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <p class="text-sm">Dispute reported for booking <span class="font-semibold">#BK-1234</span></p>
+                                    <p class="text-xs text-gray-500">18 minutes ago</p>
+                                </div>
+                            </div>
+
+                            <div class="flex items-start space-x-3">
+                                <div class="bg-primary bg-opacity-10 w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0">
+                                    <i class="fas fa-calendar text-primary text-sm"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <p class="text-sm">Booking completed: <span class="font-semibold">Central Mall Parking</span></p>
+                                    <p class="text-xs text-gray-500">25 minutes ago</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+        <!-- @END_COMPONENT: AdminDashboard -->
+    </div>
+
+    <!-- Booking Modal -->
+    <div id="booking-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <!-- @COMPONENT: BookingModal [slotId, slotData] -->
+        <div class="bg-surface rounded-lg shadow-xl p-6 w-full max-w-md mx-4">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-xl font-bold">Confirm Booking</h3>
+                <button onclick="hideBookingModal()" class="text-gray-400 hover:text-gray-600">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+
+            <div class="space-y-4 mb-6">
+                <div class="border border-gray-200 rounded-lg p-4">
+                    <h4 class="font-semibold mb-2" data-bind="selectedSlot.name">Metro Mall Parking</h4>
+                    <div class="text-sm text-gray-600 space-y-1">
+                        <p><i class="fas fa-map-marker-alt mr-2"></i><span data-bind="selectedSlot.address">Shop No. 45, Andheri West, Mumbai</span></p>
+                        <p><i class="fas fa-car mr-2"></i><span data-bind="selectedSlot.vehicleType">4-Wheeler</span></p>
+                        <p><i class="fas fa-calendar mr-2"></i><span data-bind="booking.date">Today, 2:00 PM</span></p>
+                        <p><i class="fas fa-clock mr-2"></i><span data-bind="booking.duration">3 hours</span></p>
+                    </div>
+                </div>
+
+                <div class="border border-gray-200 rounded-lg p-4">
+                    <h5 class="font-semibold mb-2">Payment Summary</h5>
+                    <div class="space-y-2 text-sm">
+                        <div class="flex justify-between">
+                            <span>Base Price (3 hours)</span>
+                            <span>₹150</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Service Fee</span>
+                            <span>₹15</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>GST (18%)</span>
+                            <span>₹30</span>
+                        </div>
+                        <hr class="my-2">
+                        <div class="flex justify-between font-semibold text-lg">
+                            <span>Total Amount</span>
+                            <span class="text-primary">₹195</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex space-x-3">
+                <button onclick="hideBookingModal()" class="flex-1 border border-gray-300 text-gray-700 py-2 px-4 rounded-lg hover:bg-gray-100 transition-colors">
+                    Cancel
+                </button>
+                <button onclick="processPayment()" class="flex-1 bg-primary text-white py-2 px-4 rounded-lg hover:bg-primary-dark transition-colors">
+                    Proceed to Payment
+                </button>
+            </div>
+        </div>
+        <!-- @END_COMPONENT: BookingModal -->
+    </div>
+
+    <!-- Add Slot Modal -->
+    <div id="add-slot-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <!-- @COMPONENT: AddSlotModal [ownerId] -->
+        <div class="bg-surface rounded-lg shadow-xl p-6 w-full max-w-lg mx-4">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-xl font-bold">Add New Parking Slot</h3>
+                <button onclick="hideAddSlotModal()" class="text-gray-400 hover:text-gray-600">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+
+            <form class="space-y-4">
+                <div class="grid md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Slot Number</label>
+                        <input type="text" placeholder="e.g., A-15" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-primary focus:border-transparent">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Vehicle Type</label>
+                        <select class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-primary focus:border-transparent">
+                            <option>2-Wheeler</option>
+                            <option>4-Wheeler</option>
+                            <option>SUV/Large Car</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Location/Address</label>
+                    <textarea rows="3" placeholder="Full address with landmarks" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-primary focus:border-transparent"></textarea>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Price per Hour (₹)</label>
+                        <input type="number" placeholder="50" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-primary focus:border-transparent">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Slot Type</label>
+                        <select class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-primary focus:border-transparent">
+                            <option>Covered</option>
+                            <option>Open</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="flex items-center space-x-2">
+                    <input type="checkbox" id="available" class="text-primary focus:ring-primary">
+                    <label for="available" class="text-sm text-gray-700">Mark as available immediately</label>
+                </div>
+
+                <div class="flex space-x-3 pt-4">
+                    <button type="button" onclick="hideAddSlotModal()" class="flex-1 border border-gray-300 text-gray-700 py-2 px-4 rounded-lg hover:bg-gray-100 transition-colors">
+                        Cancel
+                    </button>
+                    <button type="submit" class="flex-1 bg-primary text-white py-2 px-4 rounded-lg hover:bg-primary-dark transition-colors">
+                        Add Slot
+                    </button>
+                </div>
+            </form>
+        </div>
+        <!-- @END_COMPONENT: AddSlotModal -->
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="notification-toast" class="hidden fixed top-4 right-4 bg-surface border-l-4 border-success shadow-lg rounded-lg p-4 z-50">
+        <!-- @COMPONENT: NotificationToast [message, type] -->
+        <div class="flex items-center">
+            <i class="fas fa-check-circle text-success mr-3"></i>
+            <div>
+                <p class="font-medium">Booking Confirmed!</p>
+                <p class="text-sm text-gray-600">Your parking slot has been booked successfully.</p>
+            </div>
+            <button onclick="hideNotification()" class="ml-4 text-gray-400 hover:text-gray-600">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <!-- @END_COMPONENT: NotificationToast -->
+    </div>
+
+    <script>
+        // TODO: Implement business logic, API calls, and state management
+        
+        (function() {
+            // Navigation functions
+            window.showLanding = function() {
+                document.getElementById('landing-page').classList.remove('hidden');
+                document.getElementById('user-dashboard').classList.add('hidden');
+                document.getElementById('owner-dashboard').classList.add('hidden');
+                document.getElementById('admin-dashboard').classList.add('hidden');
+            };
+
+            window.showUserDashboard = function() {
+                document.getElementById('landing-page').classList.add('hidden');
+                document.getElementById('user-dashboard').classList.remove('hidden');
+                document.getElementById('owner-dashboard').classList.add('hidden');
+                document.getElementById('admin-dashboard').classList.add('hidden');
+            };
+
+            window.showOwnerDashboard = function() {
+                document.getElementById('landing-page').classList.add('hidden');
+                document.getElementById('user-dashboard').classList.add('hidden');
+                document.getElementById('owner-dashboard').classList.remove('hidden');
+                document.getElementById('admin-dashboard').classList.add('hidden');
+            };
+
+            window.showAdminDashboard = function() {
+                document.getElementById('landing-page').classList.add('hidden');
+                document.getElementById('user-dashboard').classList.add('hidden');
+                document.getElementById('owner-dashboard').classList.add('hidden');
+                document.getElementById('admin-dashboard').classList.remove('hidden');
+            };
+
+            // Modal functions
+            window.showBookingModal = function() {
+                document.getElementById('booking-modal').classList.remove('hidden');
+            };
+
+            window.hideBookingModal = function() {
+                document.getElementById('booking-modal').classList.add('hidden');
+            };
+
+            window.showAddSlotModal = function() {
+                document.getElementById('add-slot-modal').classList.remove('hidden');
+            };
+
+            window.hideAddSlotModal = function() {
+                document.getElementById('add-slot-modal').classList.add('hidden');
+            };
+
+            // Placeholder functions for demo
+            window.showLogin = function() {
+                alert('Login modal would open here');
+            };
+
+            window.showRegister = function() {
+                alert('Registration modal would open here');
+            };
+
+            window.processPayment = function() {
+                hideBookingModal();
+                showNotification('Payment processed successfully!', 'success');
+            };
+
+            window.showNotification = function(message, type) {
+                const toast = document.getElementById('notification-toast');
+                toast.classList.remove('hidden');
+                setTimeout(() => {
+                    toast.classList.add('hidden');
+                }, 3000);
+            };
+
+            window.hideNotification = function() {
+                document.getElementById('notification-toast').classList.add('hidden');
+            };
+
+            // Demo navigation for testing different dashboards
+            document.addEventListener('keydown', function(e) {
+                if (e.key === '1') showUserDashboard();
+                if (e.key === '2') showOwnerDashboard();
+                if (e.key === '3') showAdminDashboard();
+                if (e.key === '0') showLanding();
+            });
+        })();
+    </script>
+</body>
+</html>

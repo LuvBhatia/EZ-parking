@@ -12,13 +12,26 @@ interface Payment {
   status: string;
   paidAt: string;
   booking: {
+    id: string;
+    slotId: string;
+    startTime: string;
+    endTime: string;
+    duration: number;
+    totalAmount: string;
+    status: string;
+    createdAt: string;
+    approvedAt?: string;
+    paidAt?: string;
     slot: {
+      id: string;
       name: string;
       address: string;
       city: string;
+      vehicleType: string;
+      slotType: string;
+      pricePerHour: string;
+      isAvailable: boolean;
     };
-    startTime: string;
-    duration: number;
   };
 }
 
@@ -37,8 +50,10 @@ export default function PaymentHistory() {
       if (!response.ok) throw new Error("Failed to fetch payments");
       const bookings = await response.json();
       
+      console.log("Raw bookings data:", bookings);
+      
       // Filter only paid bookings for payment history
-      return bookings.filter((booking: any) => 
+      const filteredPayments = bookings.filter((booking: any) => 
         booking.status === "paid" || booking.status === "completed"
       ).map((booking: any) => ({
         id: booking.id,
@@ -48,6 +63,9 @@ export default function PaymentHistory() {
         paidAt: booking.paidAt || booking.createdAt,
         booking: booking
       }));
+      
+      console.log("Processed payments:", filteredPayments);
+      return filteredPayments;
     },
   });
 
@@ -91,10 +109,15 @@ export default function PaymentHistory() {
               <Card key={payment.id} className="p-6">
                 <div className="flex justify-between items-start mb-4">
                   <div>
-                    <h3 className="text-xl font-semibold">{payment.booking.slot.name}</h3>
+                    <h3 className="text-xl font-semibold">
+                      {payment.booking.slot?.name || 'Unknown Slot'}
+                    </h3>
                     <div className="flex items-center text-gray-600 mt-1">
                       <MapPin className="mr-2" size={16} />
-                      <span>{payment.booking.slot.address}, {payment.booking.slot.city}</span>
+                      <span>
+                        {payment.booking.slot?.address || 'Address not available'}, 
+                        {payment.booking.slot?.city || 'City not available'}
+                      </span>
                     </div>
                   </div>
                   {getStatusBadge(payment.status)}
@@ -105,7 +128,7 @@ export default function PaymentHistory() {
                     <CreditCard className="mr-2 text-gray-500" size={16} />
                     <div>
                       <p className="text-sm text-gray-500">Amount Paid</p>
-                      <p className="font-medium text-lg">₹{payment.amount}</p>
+                      <p className="font-medium text-lg">₹{payment.amount || '0'}</p>
                     </div>
                   </div>
                   
@@ -113,13 +136,17 @@ export default function PaymentHistory() {
                     <Calendar className="mr-2 text-gray-500" size={16} />
                     <div>
                       <p className="text-sm text-gray-500">Payment Date</p>
-                      <p className="font-medium">{formatDate(payment.paidAt)}</p>
+                      <p className="font-medium">
+                        {payment.paidAt ? formatDate(payment.paidAt) : 
+                         payment.booking.createdAt ? formatDate(payment.booking.createdAt) : 
+                         'Date not available'}
+                      </p>
                     </div>
                   </div>
                   
                   <div>
                     <p className="text-sm text-gray-500">Duration</p>
-                    <p className="font-medium">{payment.booking.duration} hours</p>
+                    <p className="font-medium">{payment.booking.duration || 0} hours</p>
                   </div>
                 </div>
               </Card>

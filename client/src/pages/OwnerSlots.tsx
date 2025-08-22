@@ -3,6 +3,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "@/contexts/AuthContext";
 import Sidebar from "@/components/Sidebar";
 import AddSlotModal from "@/components/AddSlotModal";
+import EditSlotModal from "@/components/EditSlotModal";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -47,9 +48,20 @@ export default function OwnerSlots() {
 
   const toggleAvailabilityMutation = useMutation({
     mutationFn: async ({ slotId, isAvailable }: { slotId: string; isAvailable: boolean }) => {
-      return apiRequest("PATCH", `/api/slots/${slotId}`, { isAvailable });
+      console.log("🚀 Making API call to update slot:", slotId, "to available:", isAvailable);
+      
+      try {
+        const result = await apiRequest("PATCH", `/api/slots/${slotId}`, { isAvailable });
+        console.log("✅ API call successful:", result);
+        return result;
+      } catch (error) {
+        console.error("❌ API call failed:", error);
+        throw error;
+      }
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
+      console.log("🎉 Mutation successful, data:", data);
+      console.log("🔄 Invalidating queries...");
       queryClient.invalidateQueries({ queryKey: ["/api/slots/owner"] });
       toast({
         title: "Slot Updated",
@@ -57,6 +69,7 @@ export default function OwnerSlots() {
       });
     },
     onError: (error: any) => {
+      console.error("❌ Mutation failed:", error);
       toast({
         title: "Update Failed",
         description: error.message || "Failed to update slot availability.",
@@ -86,6 +99,11 @@ export default function OwnerSlots() {
   });
 
   const handleToggleAvailability = (slot: ParkingSlot) => {
+    console.log("🔄 Toggling availability for slot:", slot.id);
+    console.log("Current slot data:", slot);
+    console.log("Current availability:", slot.isAvailable);
+    console.log("New availability will be:", !slot.isAvailable);
+    
     toggleAvailabilityMutation.mutate({
       slotId: slot.id,
       isAvailable: !slot.isAvailable
@@ -171,7 +189,10 @@ export default function OwnerSlots() {
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => handleToggleAvailability(slot)}
+                    onClick={() => {
+                      console.log("🔘 Button clicked for slot:", slot.id);
+                      handleToggleAvailability(slot);
+                    }}
                     disabled={toggleAvailabilityMutation.isPending}
                   >
                     {slot.isAvailable ? (
@@ -216,6 +237,21 @@ export default function OwnerSlots() {
           <AddSlotModal 
             isOpen={showAddModal}
             onClose={() => setShowAddModal(false)}
+            onSlotAdded={() => {
+              queryClient.invalidateQueries({ queryKey: ["/api/slots/owner"] });
+            }}
+          />
+        )}
+
+        {editingSlot && (
+          <EditSlotModal
+            isOpen={!!editingSlot}
+            onClose={() => setEditingSlot(null)}
+            slot={editingSlot}
+            onSlotUpdated={() => {
+              queryClient.invalidateQueries({ queryKey: ["/api/slots/owner"] });
+              setEditingSlot(null);
+            }}
           />
         )}
       </main>

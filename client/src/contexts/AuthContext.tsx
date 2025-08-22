@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import { useLocation } from "wouter";
 
 interface User {
   id: string;
@@ -34,6 +35,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   useEffect(() => {
     const storedToken = localStorage.getItem("token");
@@ -91,11 +93,39 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   };
 
   const logout = () => {
+    console.log("🔄 Logout initiated");
+    
+    // Add body class to hide content
+    document.body.classList.add('logging-out');
+    
+    // Set logging out state to prevent any rendering
+    setIsLoggingOut(true);
+    
+    // Clear state immediately
     setToken(null);
     setUser(null);
+    
+    // Clear localStorage
     localStorage.removeItem("token");
     localStorage.removeItem("user");
+    localStorage.removeItem("refreshToken");
+    sessionStorage.clear();
+    
+    // Force immediate redirect
+    window.location.replace("/login");
   };
+
+  // If logging out, show loading
+  if (isLoggingOut) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin w-8 h-8 border-4 border-primary border-t-transparent rounded-full mx-auto mb-4" />
+          <p className="text-gray-600">Logging out...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <AuthContext.Provider

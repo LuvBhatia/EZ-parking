@@ -12,9 +12,10 @@ import { Checkbox } from "@/components/ui/checkbox";
 interface AddSlotModalProps {
   isOpen: boolean;
   onClose: () => void;
+  onSlotAdded?: () => void;
 }
 
-export default function AddSlotModal({ isOpen, onClose }: AddSlotModalProps) {
+export default function AddSlotModal({ isOpen, onClose, onSlotAdded }: AddSlotModalProps) {
   const { token } = useAuth();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
@@ -32,6 +33,8 @@ export default function AddSlotModal({ isOpen, onClose }: AddSlotModalProps) {
     e.preventDefault();
     setIsLoading(true);
 
+    console.log("Submitting slot data:", formData);
+
     try {
       const response = await fetch("/api/slots", {
         method: "POST",
@@ -45,10 +48,16 @@ export default function AddSlotModal({ isOpen, onClose }: AddSlotModalProps) {
         }),
       });
 
+      console.log("Response status:", response.status);
+
       if (!response.ok) {
         const error = await response.json();
-        throw new Error(error.message);
+        console.error("Server error:", error);
+        throw new Error(error.message || `HTTP ${response.status}: ${response.statusText}`);
       }
+
+      const result = await response.json();
+      console.log("Success response:", result);
 
       toast({
         title: "Slot Added",
@@ -68,12 +77,15 @@ export default function AddSlotModal({ isOpen, onClose }: AddSlotModalProps) {
         isAvailable: true,
       });
 
-      // Refresh page to show new slot
-      window.location.reload();
+      // Call callback to refresh data
+      if (onSlotAdded) {
+        onSlotAdded();
+      }
     } catch (error: any) {
+      console.error("Error adding slot:", error);
       toast({
         title: "Error Adding Slot",
-        description: error.message,
+        description: error.message || "An unexpected error occurred",
         variant: "destructive",
       });
     } finally {

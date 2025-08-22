@@ -7,6 +7,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Loader2 } from "lucide-react";
+import { AlertCircle } from "lucide-react";
 
 // Make sure to call `loadStripe` outside of a component's render to avoid
 // recreating the `Stripe` object on every render.
@@ -88,15 +89,44 @@ interface CheckoutProps {
 export default function Checkout({ bookingId }: CheckoutProps) {
   const { token } = useAuth();
   const [clientSecret, setClientSecret] = useState("");
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     // Create PaymentIntent as soon as the page loads
     apiRequest("POST", "/api/create-payment-intent", { bookingId })
       .then((res) => res.json())
       .then((data) => {
-        setClientSecret(data.clientSecret)
+        setClientSecret(data.clientSecret);
+        setError(null);
+      })
+      .catch((err) => {
+        console.error("Failed to create payment intent:", err);
+        if (err.message.includes("401")) {
+          setError("Authentication failed. Please login again.");
+        } else {
+          setError("Failed to create payment. Please try again.");
+        }
       });
   }, [bookingId]);
+
+  if (error) {
+    return (
+      <div className="h-screen flex items-center justify-center">
+        <Card className="w-full max-w-md mx-auto">
+          <CardContent className="pt-6 text-center">
+            <div className="text-red-500 mb-4">
+              <AlertCircle className="h-12 w-12 mx-auto" />
+            </div>
+            <h2 className="text-xl font-semibold mb-2">Payment Error</h2>
+            <p className="text-gray-600 mb-4">{error}</p>
+            <Button onClick={() => window.location.href = "/login"}>
+              Go to Login
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   if (!clientSecret) {
     return (

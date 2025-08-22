@@ -1,12 +1,18 @@
-import { 
-  users, owners, parkingSlots, bookings, notifications,
-  type User, type InsertUser, type Owner, type InsertOwner,
-  type ParkingSlot, type InsertParkingSlot, type InsertParkingSlotWithOwner, 
-  type Booking, type InsertBooking,
-  type Notification, type InsertNotification
-} from "@shared/schema";
-import { db } from "./db";
 import { eq, and, desc, sql } from "drizzle-orm";
+import { db } from "./db";
+import {
+  users,
+  owners,
+  parkingSlots,
+  bookings,
+  notifications,
+  type InsertUser,
+  type InsertOwner,
+  type InsertParkingSlot,
+  type InsertParkingSlotWithOwner,
+  type InsertBooking,
+  type InsertNotification,
+} from "../shared/schema";
 
 export interface IStorage {
   // User operations
@@ -28,6 +34,9 @@ export interface IStorage {
   getSlotsByOwner(ownerId: string): Promise<ParkingSlot[]>;
   createParkingSlot(slot: InsertParkingSlotWithOwner): Promise<ParkingSlot>;
   updateSlotAvailability(id: string, isAvailable: boolean): Promise<ParkingSlot>;
+  getSlotById(id: string): Promise<ParkingSlot | null>;
+  updateSlot(id: string, updateData: Partial<InsertParkingSlot>): Promise<ParkingSlot>;
+  deleteSlot(id: string): Promise<void>;
 
   // Booking operations
   getBooking(id: string): Promise<Booking | undefined>;
@@ -136,12 +145,43 @@ export class DatabaseStorage implements IStorage {
   }
 
   async updateSlotAvailability(id: string, isAvailable: boolean): Promise<ParkingSlot> {
+    console.log("🔄 Storage: Updating slot availability");
+    console.log("Slot ID:", id);
+    console.log("New availability:", isAvailable);
+    
     const [slot] = await db
       .update(parkingSlots)
       .set({ isAvailable })
       .where(eq(parkingSlots.id, id))
       .returning();
+    
+    console.log("✅ Storage: Slot updated successfully");
+    console.log("Updated slot:", slot);
+    
     return slot;
+  }
+
+  async getSlotById(id: string): Promise<ParkingSlot | null> {
+    const [slot] = await db
+      .select()
+      .from(parkingSlots)
+      .where(eq(parkingSlots.id, id));
+    return slot || null;
+  }
+
+  async updateSlot(id: string, updateData: Partial<InsertParkingSlot>): Promise<ParkingSlot> {
+    const [slot] = await db
+      .update(parkingSlots)
+      .set(updateData)
+      .where(eq(parkingSlots.id, id))
+      .returning();
+    return slot;
+  }
+
+  async deleteSlot(id: string): Promise<void> {
+    await db
+      .delete(parkingSlots)
+      .where(eq(parkingSlots.id, id));
   }
 
   async getBooking(id: string): Promise<Booking | undefined> {
@@ -151,8 +191,33 @@ export class DatabaseStorage implements IStorage {
 
   async getBookingsByUser(userId: string): Promise<Booking[]> {
     return await db
-      .select()
+      .select({
+        id: bookings.id,
+        userId: bookings.userId,
+        slotId: bookings.slotId,
+        startTime: bookings.startTime,
+        endTime: bookings.endTime,
+        duration: bookings.duration,
+        totalAmount: bookings.totalAmount,
+        status: bookings.status,
+        paymentIntentId: bookings.paymentIntentId,
+        createdAt: bookings.createdAt,
+        approvedAt: bookings.approvedAt,
+        paidAt: bookings.paidAt,
+        // Include slot information
+        slot: {
+          id: parkingSlots.id,
+          name: parkingSlots.name,
+          address: parkingSlots.address,
+          city: parkingSlots.city,
+          vehicleType: parkingSlots.vehicleType,
+          slotType: parkingSlots.slotType,
+          pricePerHour: parkingSlots.pricePerHour,
+          isAvailable: parkingSlots.isAvailable,
+        }
+      })
       .from(bookings)
+      .innerJoin(parkingSlots, eq(bookings.slotId, parkingSlots.id))
       .where(eq(bookings.userId, userId))
       .orderBy(desc(bookings.createdAt));
   }
