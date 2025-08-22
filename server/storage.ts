@@ -1,7 +1,8 @@
 import { 
   users, owners, parkingSlots, bookings, notifications,
   type User, type InsertUser, type Owner, type InsertOwner,
-  type ParkingSlot, type InsertParkingSlot, type Booking, type InsertBooking,
+  type ParkingSlot, type InsertParkingSlot, type InsertParkingSlotWithOwner, 
+  type Booking, type InsertBooking,
   type Notification, type InsertNotification
 } from "@shared/schema";
 import { db } from "./db";
@@ -25,7 +26,7 @@ export interface IStorage {
   getParkingSlot(id: string): Promise<ParkingSlot | undefined>;
   getAvailableSlots(city?: string, vehicleType?: string): Promise<ParkingSlot[]>;
   getSlotsByOwner(ownerId: string): Promise<ParkingSlot[]>;
-  createParkingSlot(slot: InsertParkingSlot): Promise<ParkingSlot>;
+  createParkingSlot(slot: InsertParkingSlotWithOwner): Promise<ParkingSlot>;
   updateSlotAvailability(id: string, isAvailable: boolean): Promise<ParkingSlot>;
 
   // Booking operations
@@ -129,7 +130,7 @@ export class DatabaseStorage implements IStorage {
     return await db.select().from(parkingSlots).where(eq(parkingSlots.ownerId, ownerId));
   }
 
-  async createParkingSlot(insertSlot: InsertParkingSlot): Promise<ParkingSlot> {
+  async createParkingSlot(insertSlot: InsertParkingSlotWithOwner): Promise<ParkingSlot> {
     const [slot] = await db.insert(parkingSlots).values(insertSlot).returning();
     return slot;
   }

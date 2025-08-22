@@ -156,6 +156,7 @@ export type Owner = typeof owners.$inferSelect;
 export type InsertOwner = z.infer<typeof insertOwnerSchema>;
 export type ParkingSlot = typeof parkingSlots.$inferSelect;
 export type InsertParkingSlot = z.infer<typeof insertParkingSlotSchema>;
+export type InsertParkingSlotWithOwner = InsertParkingSlot & { ownerId: string };
 export type Booking = typeof bookings.$inferSelect;
 export type InsertBooking = z.infer<typeof insertBookingSchema>;
 export type Notification = typeof notifications.$inferSelect;
