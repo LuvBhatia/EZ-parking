@@ -15,8 +15,8 @@ export default function Navbar() {
   const { user, logout } = useAuth();
   const [location] = useLocation();
 
-  // Don't show navbar on auth pages or when user is logged in (they see sidebar instead)
-  if (location === "/login" || location === "/register" || user) {
+  // Don't show navbar on auth pages (users see sidebar with logout instead)
+  if (location === "/login" || location === "/register") {
     return null;
   }
 

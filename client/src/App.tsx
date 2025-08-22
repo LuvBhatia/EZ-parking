@@ -13,6 +13,9 @@ import UserDashboard from "@/pages/UserDashboard";
 import OwnerDashboard from "@/pages/OwnerDashboard";
 import AdminDashboard from "@/pages/AdminDashboard";
 import Checkout from "@/pages/Checkout";
+import Bookings from "@/pages/Bookings";
+import PaymentHistory from "@/pages/PaymentHistory";
+import Profile from "@/pages/Profile";
 import NotFound from "@/pages/not-found";
 
 function AppContent() {
@@ -55,6 +58,24 @@ function AppContent() {
               <Checkout bookingId={params.bookingId!} />
             </ProtectedRoute>
           )}
+        </Route>
+        
+        <Route path="/bookings">
+          <ProtectedRoute requiredRole={["user"]}>
+            <Bookings />
+          </ProtectedRoute>
+        </Route>
+        
+        <Route path="/payments">
+          <ProtectedRoute requiredRole={["user"]}>
+            <PaymentHistory />
+          </ProtectedRoute>
+        </Route>
+        
+        <Route path="/profile">
+          <ProtectedRoute requiredRole={["user", "owner", "admin"]}>
+            <Profile />
+          </ProtectedRoute>
         </Route>
         
         {/* Fallback to 404 */}

@@ -295,9 +295,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const endTime = new Date(bookingData.endTime);
 
       const booking = await storage.createBooking({
-        ...bookingData,
+        slotId: bookingData.slotId,
         startTime,
         endTime,
+        duration: bookingData.duration,
+        totalAmount: bookingData.totalAmount,
         userId: req.user!.id,
       });
 
@@ -322,6 +324,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const { status } = req.body;
 
       const booking = await storage.updateBookingStatus(id, status);
+
+      // Update slot availability based on booking status
+      if (status === "approved" || status === "paid") {
+        // Mark slot as occupied during booking period
+        await storage.updateSlotAvailability(booking.slotId, false);
+      } else if (status === "rejected" || status === "cancelled" || status === "completed") {
+        // Mark slot as available again
+        await storage.updateSlotAvailability(booking.slotId, true);
+      }
 
       // Create notification for user and emit real-time update
       const userNotification = await storage.createNotification({
